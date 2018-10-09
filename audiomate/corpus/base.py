@@ -137,7 +137,7 @@ class CorpusView(metaclass=abc.ABCMeta):
                                    are considered.
 
         Returns:
-             set: A set of distinct label-values.
+             :class:`set`: A set of distinct label-values.
         """
         values = set()
 
@@ -183,6 +183,26 @@ class CorpusView(metaclass=abc.ABCMeta):
                 duration[label_value] += utt_count
 
         return duration
+
+    def all_tokens(self, delimiter=' ', label_list_ids=None):
+        """
+        Return a list of all tokens occurring in one of the labels in the corpus.
+
+        Args:
+            delimiter (str): The delimiter used to split labels into tokens
+                             (see :meth:`audiomate.corpus.assets.Label.tokenized`).
+            label_list_ids (list): If not None, only labels from label-lists with an idx contained in this list
+                                   are considered.
+
+        Returns:
+             :class:`set`: A set of distinct tokens.
+        """
+        tokens = set()
+
+        for utterance in self.utterances.values():
+            tokens = tokens.union(utterance.all_tokens(delimiter=delimiter, label_list_ids=label_list_ids))
+
+        return tokens
 
     #
     #   Data
